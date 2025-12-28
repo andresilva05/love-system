@@ -1,51 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
-import { CONFIG } from '../config';
+import { allImages } from '../utils/imageImporter';
 
 function PhotoGallery() {
   const [selectedIndex, setSelectedIndex] = useState(null);
-  const [photos, setPhotos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState([]);
+  const [photos] = useState(allImages);
+  const [loading] = useState(false); // Agora é sempre false pois as imagens já estão carregadas
 
-  // Verificar se as fotos existem
-  useEffect(() => {
-    const checkPhotos = async () => {
-      setLoading(true);
-      const existingPhotos = [];
-      const errorList = [];
-      
-      // Testar cada foto
-      for (let i = 0; i < CONFIG.photos.length; i++) {
-        const photo = CONFIG.photos[i];
-        try {
-          const exists = await checkPhotoExists(photo);
-          if (exists) {
-            existingPhotos.push(photo);
-          } else {
-            errorList.push(`Foto não encontrada: ${photo}`);
-          }
-        } catch (error) {
-          errorList.push(`Erro ao carregar: ${photo}`);
-        }
-      }
-      
-      setPhotos(existingPhotos);
-      setErrors(errorList);
-      setLoading(false);
-    };
-    
-    checkPhotos();
-  }, []);
-
-  const checkPhotoExists = (url) => {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.onload = () => resolve(true);
-      img.onerror = () => resolve(false);
-      img.src = url;
-    });
-  };
-
+  // Funções de navegação
   const openModal = useCallback((index) => {
     setSelectedIndex(index);
   }, []);
@@ -70,7 +31,7 @@ function PhotoGallery() {
     });
   }, [photos.length]);
 
-  // Teclado navegação - CORRIGIDO
+  // Navegação por teclado
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (selectedIndex !== null) {
@@ -90,31 +51,7 @@ function PhotoGallery() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedIndex, photos.length, closeModal]);
 
-  if (loading) {
-    return (
-      <div className="gallery-container">
-        <h2>📸 Nossos Momentos</h2>
-        <div style={{ 
-          padding: '3rem', 
-          textAlign: 'center',
-          opacity: 0.7 
-        }}>
-          <div style={{ 
-            display: 'inline-block',
-            width: '40px',
-            height: '40px',
-            border: '3px solid #f3f4f6',
-            borderTop: '3px solid #7c3aed',
-            borderRadius: '50%',
-            animation: 'spin 1s linear infinite',
-            marginBottom: '1rem'
-          }} />
-          <p>Carregando suas memórias especiais...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // Se não houver fotos (não deve acontecer agora)
   if (photos.length === 0) {
     return (
       <div className="gallery-container">
@@ -128,36 +65,9 @@ function PhotoGallery() {
           margin: '1rem 0'
         }}>
           <h3 style={{ color: '#7c3aed', marginBottom: '1rem' }}>
-            Fotos não encontradas
+            Nenhuma foto encontrada
           </h3>
-          
-          <p style={{ marginBottom: '1rem' }}>
-            Verifique se suas fotos estão na pasta correta
-          </p>
-          
-          <div style={{ marginTop: '2rem' }}>
-            <h4 style={{ marginBottom: '1rem', color: '#6b7280' }}>
-              Enquanto isso, nossos momentos especiais:
-            </h4>
-            <div className="gallery-grid">
-              {[1, 2, 3, 4, 5, 6].map((num) => (
-                <div key={num} className="gallery-item" style={{
-                  background: 'linear-gradient(135deg, #f3f4f6, #e5e7eb)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  color: '#9ca3af',
-                  fontSize: '1.5rem',
-                  cursor: 'default'
-                }}>
-                  <div style={{ textAlign: 'center' }}>
-                    <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>❤️</div>
-                    <div>Momento {num}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <p>Adicione fotos na pasta src/assets/</p>
         </div>
       </div>
     );
@@ -187,14 +97,26 @@ function PhotoGallery() {
               loading="lazy"
               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
             />
-            <div className="photo-label">
+            <div style={{
+              position: 'absolute',
+              bottom: '0',
+              left: '0',
+              right: '0',
+              background: 'linear-gradient(transparent, rgba(0,0,0,0.5))',
+              color: 'white',
+              padding: '0.5rem',
+              fontSize: '0.8rem',
+              opacity: 0,
+              transition: 'opacity 0.3s',
+              textAlign: 'center'
+            }} className="photo-label">
               Momento {index + 1}
             </div>
           </div>
         ))}
       </div>
 
-      {/* MODAL CORRIGIDO */}
+      {/* Modal */}
       {selectedIndex !== null && photos[selectedIndex] && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -259,7 +181,7 @@ function PhotoGallery() {
                 borderRadius: '8px',
                 boxShadow: '0 10px 40px rgba(0,0,0,0.3)'
               }}
-              key={selectedIndex} // Importante: força recarregar ao mudar
+              key={selectedIndex}
             />
             
             <button 
@@ -301,47 +223,6 @@ function PhotoGallery() {
               }}
             >
               {selectedIndex + 1} / {photos.length}
-            </div>
-            
-            {/* Miniaturas na parte inferior */}
-            <div style={{
-              position: 'absolute',
-              bottom: '-80px',
-              left: '0',
-              right: '0',
-              display: 'flex',
-              justifyContent: 'center',
-              gap: '8px',
-              padding: '10px',
-              overflowX: 'auto'
-            }}>
-              {photos.map((photo, index) => (
-                <div 
-                  key={index}
-                  onClick={() => setSelectedIndex(index)}
-                  style={{
-                    width: '50px',
-                    height: '50px',
-                    borderRadius: '4px',
-                    overflow: 'hidden',
-                    cursor: 'pointer',
-                    opacity: index === selectedIndex ? 1 : 0.5,
-                    border: index === selectedIndex ? '2px solid white' : '1px solid rgba(255,255,255,0.3)',
-                    transition: 'all 0.2s',
-                    flexShrink: 0
-                  }}
-                >
-                  <img 
-                    src={photo} 
-                    alt={`Miniatura ${index + 1}`}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover'
-                    }}
-                  />
-                </div>
-              ))}
             </div>
           </div>
         </div>
