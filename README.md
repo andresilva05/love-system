@@ -1,16 +1,68 @@
-# React + Vite
+💖 Site "Nosso Amor" - André & Gracielli
+Um site romântico criado com React para celebrar o amor, criado especialmente para minha esposa Gracielli. Este projeto documenta nossa jornada juntos desde 04 de janeiro de 2023.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🌟 Funcionalidades Principais
+⏳ Contador de Tempo Real
+Exibe anos, meses, dias, horas, minutos e segundos juntos
 
-Currently, two official plugins are available:
+Atualiza automaticamente a cada segundo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Mostra estatísticas adicionais (dias totais, semanas, etc.)
 
-## React Compiler
+📸 Galeria de Fotos Interativa
+Exibe fotos especiais do casal
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Modal com navegação entre fotos (setas do teclado ou clique)
 
-## Expanding the ESLint configuration
+Miniaturas para navegação rápida
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Efeitos de zoom e transições suaves
+
+📊 Estatísticas Simbólicas
+Calcula dados criativos como:
+
+Dias de aventura
+
+Finais de semana juntos
+
+Batidas do coração compartilhadas
+
+Luas cheias vividas
+
+Beijos trocados
+
+Riso compartilhado****
+
+🔗 QR Code Personalizado
+Gera QR Code com link do site
+
+Opção para baixar imagem do QR Code
+
+Botão para copiar link automaticamente
+
+📜 Linha do Tempo Interativa
+Mostra momentos importantes do relacionamento
+
+Design visual com linha cronológica
+
+Clique para expandir detalhes
+
+🎨 Personalização Completa
+Tema claro/escuro
+
+Cores personalizáveis
+
+Animações de corações no fundo
+
+Totalmente responsivo
+
+🚀 Tecnologias Utilizadas
+React 18 - Biblioteca principal
+
+Vite - Build tool e servidor de desenvolvimento
+
+date-fns - Manipulação de datas
+
+qrcode.react - Geração de QR Codes
+
+CSS3 - Estilização com variáveis CSS e animações
